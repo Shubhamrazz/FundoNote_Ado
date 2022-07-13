@@ -1,8 +1,12 @@
 ﻿using BussinessLayer.Interface;
 using DatabaseLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+
 
 namespace FundoNote_Ado.net.Controllers
 {
@@ -30,20 +34,20 @@ namespace FundoNote_Ado.net.Controllers
             }
         }
 
-        //[HttpGet("GetAllUsers")]
-        //public IActionResult GetAllUsers()
-        //{
-        //    try
-        //    {
-        //        List<UserResponseModel> users = new List<UserResponseModel>();
-        //        users = this.userBL.GetAllUsers();
-        //        return Ok(new { success = true, Message = "All Users fetch successfully", data = users });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        [HttpGet("GetAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            try
+            {
+                List<UserResponseModel> users = new List<UserResponseModel>();
+                users = this.userBL.GetAllUsers();
+                return Ok(new { success = true, Message = "All Users fetch successfully", data = users });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         //[HttpPost("Login")]
         //public IActionResult LoginUser(LoginUserModel user)
@@ -60,7 +64,7 @@ namespace FundoNote_Ado.net.Controllers
         //    }
         //}
 
-        //[HttpPost("ForgetPasswordUser")]
+        //[HttpPost("ForgetPasswordUser/{email}")]
         //public IActionResult ForgetPasswordUser(string email)
         //{
         //    try
@@ -71,9 +75,30 @@ namespace FundoNote_Ado.net.Controllers
         //    }
         //    catch (Exception ex)
         //    {
+                
         //        throw ex;
         //    }
         //}
+
+        //[Authorize]
+        //[HttpPut("ResetPassword")]
+        //public IActionResult ResetPassword(PasswordModel modelPassword)
+        //{
+        //    try
+        //    {
+        //        var identity = User.Identity as ClaimsIdentity;
+        //        IEnumerable<Claim> claims = identity.Claims;
+        //        string email = claims.Where(p => p.Type == @"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").FirstOrDefault()?.Value;
+        //        bool result = this.userBL.ResetPassoword(email, modelPassword);
+        //        return Ok(new { success = true, Message = $"{email} your Password Updated successfully!" });
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
 
     }
 }

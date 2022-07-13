@@ -118,8 +118,7 @@ namespace RepositoryLayer.Services
         //    }
         //    catch (MessageQueueException ex)
         //    {
-        //        if (ex.MessageQueueErrorCode ==
-        //            MessageQueueErrorCode.AccessDenied)
+        //        if (ex.MessageQueueErrorCode == MessageQueueErrorCode.AccessDenied)
         //        {
         //            Console.WriteLine("Access is denied. " +
         //                "Queue might be a system queue.");
@@ -157,40 +156,40 @@ namespace RepositoryLayer.Services
         //    }
         //}
 
-        //public List<UserResponseModel> GetAllUsers()
-        //{
+        public List<UserResponseModel> GetAllUsers()
+        {
 
-        //    List<UserResponseModel> users = new List<UserResponseModel>();
-        //    SqlConnection connection = new SqlConnection(connectionString);
-        //    try
-        //    {
-        //        using (connection)
-        //        {
-        //            connection.Open();
-        //            SqlCommand com = new SqlCommand("spGetAllUser", connection);
-        //            com.CommandType = CommandType.StoredProcedure;
-        //            SqlDataReader reader = com.ExecuteReader();
-        //            while (reader.Read())
-        //            {
-        //                UserResponseModel user = new UserResponseModel();
-        //                user.UserId = reader["UserId"] == DBNull.Value ? default : reader.GetInt32("UserId");
-        //                user.FirstName = reader["Firstname"] == DBNull.Value ? default : reader.GetString("Firstname");
-        //                user.LastName = reader["Lastname"] == DBNull.Value ? default : reader.GetString("Lastname");
-        //                user.Email = reader["Email"] == DBNull.Value ? default : reader.GetString("Email");
-        //                user.password = reader["Password"] == DBNull.Value ? default : reader.GetString("password");
-        //                //user.CreatedDate=Convert.ToDateTime(reader["CreatedDate"]);
-        //                //user.ModifiedDate = Convert.ToDateTime(reader["ModifiedDate"]);
-        //                users.Add(user);
-        //            }
-        //            return users;
+            List<UserResponseModel> users = new List<UserResponseModel>();
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand com = new SqlCommand("spGetAllUser", connection);
+                    com.CommandType = CommandType.StoredProcedure;
+                    SqlDataReader reader = com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        UserResponseModel user = new UserResponseModel();
+                        user.UserId = reader["UserId"] == DBNull.Value ? default : reader.GetInt32("UserId");
+                        user.FirstName = reader["Firstname"] == DBNull.Value ? default : reader.GetString("Firstname");
+                        user.LastName = reader["Lastname"] == DBNull.Value ? default : reader.GetString("Lastname");
+                        user.Email = reader["Email"] == DBNull.Value ? default : reader.GetString("Email");
+                        user.password = reader["Password"] == DBNull.Value ? default : reader.GetString("password");
+                        //user.CreatedDate=Convert.ToDateTime(reader["CreatedDate"]);
+                        //user.ModifiedDate = Convert.ToDateTime(reader["ModifiedDate"]);
+                        users.Add(user);
+                    }
+                    return users;
 
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         //public string LoginUser(LoginUserModel loginUser)
         //{
@@ -236,8 +235,8 @@ namespace RepositoryLayer.Services
         //        {
         //            Subject = new ClaimsIdentity(new Claim[]
         //            {
-        //            new Claim("email", email),
-        //            new Claim("userId",userId.ToString())
+        //                new Claim("email", email),
+        //                new Claim("userId",userId.ToString())
         //            }),
         //            Expires = DateTime.UtcNow.AddHours(2),
 
@@ -255,6 +254,36 @@ namespace RepositoryLayer.Services
         //    }
         //}
 
+        //public bool ResetPassoword(string email, PasswordModel modelPassword)
+        
+        //{
+        //    SqlConnection connection = new SqlConnection(connectionString);
+        //    var result = 0;
 
+        //    try
+        //    {
+        //        using (connection)
+        //        {
+        //            connection.Open();
+        //            SqlCommand com = new SqlCommand("spResetPassword", connection);
+        //            com.CommandType = CommandType.StoredProcedure;
+        //            com.Parameters.AddWithValue("@Email", email);
+        //            com.Parameters.AddWithValue("@Password", modelPassword.Password);
+        //            if (modelPassword.Password == modelPassword.CPassword)
+        //            {
+        //                result = com.ExecuteNonQuery();
+        //            }
+
+        //            if (result > 0)
+        //                return true;
+        //            return false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+
+        //}
     }
 }
