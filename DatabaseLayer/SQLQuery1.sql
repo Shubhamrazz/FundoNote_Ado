@@ -13,7 +13,7 @@ Password varchar(255),
 CreatedDate datetime default getdate(),
 ModifiedDate datetime default getdate()
 )
-insert into Users(Firstname,Lastname,Email,Password) values('Mistu','Megha','meghamistu@gmail.com','Megha@201')
+insert into Users(Firstname,Lastname,Email,Password) values('Priyanka','Sharma','piku@gmail.com','Priyanka@201')
 select * from Users
 
 drop table Users
@@ -21,6 +21,7 @@ drop table Users
 
 
 --Created Stored Procedure
+
 create procedure spAddUser(
 @Firstname varchar(50), 
 @Lastname varchar(50),
@@ -68,3 +69,68 @@ END CATCH
 exec spGetAllUser
 --to get all records from table
 select * from Users
+
+--Created Stored Procedure for LoginUser
+Create procedure spLoginUser(
+@Email varchar(50),
+@Password varchar(50)
+)
+As
+Begin try
+select * from Users where Email=@Email and password = @Password
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+exec spLoginUser 'piku@gmail.com' ,'Priyanka@201'
+
+
+select * from Users
+
+drop procedure spForgetPasswordUser
+
+--Created Stored Procedure for ForgotPassword
+Create procedure spForgetPasswordUser(
+@Email varchar(50)
+)
+As
+Begin try
+select * from Users where Email=@Email 
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+exec spForgetPasswordUser 'piku@gmail.com' 
+
+drop procedure spResetPassword
+
+Create procedure spResetPassword(
+@Email varchar(50),
+@Password varchar(50)
+)
+As
+Begin try
+select * from Users where Email=@Email 
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+exec spResetPassword 'piku@gmail.com' ,'Abcdef@123'

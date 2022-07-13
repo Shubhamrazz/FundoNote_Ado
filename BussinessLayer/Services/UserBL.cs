@@ -26,40 +26,51 @@ namespace BussinessLayer.Services
             }
         }
 
-        //public bool ForgetPasswordUser(string email)
-        //{
-        //    try
-        //    {
-        //        return this.userRL.ForgetPasswordUser(email);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
        
-        //public List<UserResponseModel> GetAllUsers()
-        //{
-        //    try
-        //    {
-        //        return this.userRL.GetAllUsers();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        public List<UserResponseModel> GetAllUsers()
+        {
+            try
+            {
+                return this.userRL.GetAllUsers();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        //public string LoginUser(LoginUserModel loginUser)
-        //{
-        //    try
-        //    {
-        //        return this.userRL.LoginUser(loginUser);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        public string LoginUser(LoginUserModel loginUser)
+        {
+            try
+            {
+                return this.userRL.LoginUser(loginUser);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public bool ForgetPasswordUser(string email)
+        {
+            try
+            {
+                return this.userRL.ForgetPasswordUser(email);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public bool ResetPassoword(string email, PasswordModel modelPassword)
+        {
+            try
+            {
+                return this.userRL.ResetPassoword(email, modelPassword);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
