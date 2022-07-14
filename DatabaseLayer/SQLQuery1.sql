@@ -134,3 +134,49 @@ SELECT
 END CATCH
 
 exec spResetPassword 'piku@gmail.com' ,'Abcdef@123'
+
+
+
+--**********************************************************************************************************************
+--**********************************************************************************************************************
+--Create a table Note
+create table Note(
+NoteId int identity(1,1) primary key,
+Title varchar(20) not null,
+Description varchar(max) not null,
+Bgcolor varchar(50) not null,
+IsPin bit,
+IsArchive bit,
+IsRemainder bit,
+IsTrash bit,
+UserId int not null foreign key references Users(UserId),
+RegisteredDate datetime default GETDATE(),
+Remainder datetime,
+ModifiedDate datetime null
+)
+--To get all the records from Table
+select * from Note
+
+--Create a stored procedure of Addnote
+Create procedure spAddNote(
+@Title varchar(20), 
+@Description varchar(max),
+@BgColor varchar(50),
+@UserId int
+)
+As
+Begin try
+insert into Note(Title,Description,Bgcolor,UserId,ModifiedDate) values(@Title,@Description,@BgColor,@UserId,GetDate())
+Select * from Note where UserId = @UserId
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+--Excecuting the spAddNote Stored Procedure
+exec spAddNote 'FundoNote','By Using Data first approach','Blue',2;
