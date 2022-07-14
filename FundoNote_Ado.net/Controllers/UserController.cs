@@ -80,24 +80,24 @@ namespace FundoNote_Ado.net.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpPut("ResetPassword")]
-        //public IActionResult ResetPassword(PasswordModel modelPassword)
-        //{
-        //    try
-        //    {
-        //        var identity = User.Identity as ClaimsIdentity;
-        //        IEnumerable<Claim> claims = identity.Claims;
-        //        string email = claims.Where(p => p.Type == @"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").FirstOrDefault()?.Value;
-        //        bool result = this.userBL.ResetPassoword(email, modelPassword);
-        //        return Ok(new { success = true, Message = $"{email} your Password Updated successfully!" });
+        [Authorize]
+        [HttpPut("ResetPassword")]
+        public IActionResult ResetPassword(PasswordModel modelPassword)
+        {
+            try
+            {
+                var identity = User.Identity as ClaimsIdentity;
+                IEnumerable<Claim> claims = identity.Claims;
+                string email = claims.Where(p => p.Type == @"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").FirstOrDefault()?.Value;
+                bool result = this.userBL.ResetPassoword(email, modelPassword);
+                return Ok(new { success = true, Message = $"{email} your Password Updated successfully!" });
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
     }
