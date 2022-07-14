@@ -41,22 +41,22 @@ namespace FundoNote_Ado.net.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpPost("GetAllNotes")]
-        //public async Task<IActionResult> GetAllNotes()
-        //{
-        //    try
-        //    {
-        //        var userId = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userId", StringComparison.InvariantCultureIgnoreCase));
-        //        int UserId = Int32.Parse(userId.Value);
-        //        var result = await this.noteBL.GetAllNotes(UserId);
-        //        return Ok(new { success = true, Message = "All Notes Fetch Successfully", data = result });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        [Authorize]
+        [HttpPost("GetAllNotes")]
+        public async Task<IActionResult> GetAllNotes()
+        {
+            try
+            {
+                var userId = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userId", StringComparison.InvariantCultureIgnoreCase));
+                int UserId = Int32.Parse(userId.Value);
+                var result = await this.noteBL.GetAllNotes(UserId);
+                return Ok(new { success = true, Message = "All Notes Fetch Successfully", data = result });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         [Authorize]
