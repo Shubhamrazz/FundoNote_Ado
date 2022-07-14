@@ -226,3 +226,17 @@ SELECT
 	ERROR_MESSAGE() AS ErrorMessage;
 END CATCH
 
+--Stored Procedure For Delete Node
+create procedure spDeleteNote(@NoteId int,@UserId int)
+As
+Begin try
+Update Note set IsTrash=1 where NoteId=@NoteId and UserId=@UserId
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
