@@ -64,21 +64,21 @@ namespace FundoNote_Ado.net.Controllers
             }
         }
 
-        //[HttpPost("ForgetPasswordUser/{email}")]
-        //public IActionResult ForgetPasswordUser(string email)
-        //{
-        //    try
-        //    {
-        //        bool result = this.userBL.ForgetPasswordUser(email);
-        //        return Ok(new { success = true, Message = "Reset Password Link Send successfully", data = result });
+        [HttpPost("ForgetPasswordUser/{email}")]
+        public IActionResult ForgetPasswordUser(string email)
+        {
+            try
+            {
+                bool result = this.userBL.ForgetPasswordUser(email);
+                return Ok(new { success = true, Message = "Reset Password Link Send successfully", data = result });
 
-        //    }
-        //    catch (Exception ex)
-        //    {
+            }
+            catch (Exception ex)
+            {
 
-        //        throw ex;
-        //    }
-        //}
+                throw ex;
+            }
+        }
 
         //[Authorize]
         //[HttpPut("ResetPassword")]
