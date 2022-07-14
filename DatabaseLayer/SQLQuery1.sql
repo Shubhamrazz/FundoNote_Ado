@@ -180,3 +180,49 @@ END CATCH
 
 --Excecuting the spAddNote Stored Procedure
 exec spAddNote 'FundoNote','By Using Data first approach','Blue',2;
+
+
+Create procedure spUpdateNote(
+@Title varchar(20), 
+@Description varchar(max),
+@BgColor varchar(50),
+@UserId int,
+@NoteId int,
+@IsPin bit,
+@IsArchive bit,
+@IsTrash bit
+)
+As
+Begin try
+Update Note set Title=@Title, Description=@Description,BgColor=@BgColor,UserId=@UserId,IsPin=@IsPin,IsArchive=@IsArchive,IsTrash=@IsTrash,ModifiedDate=GetDate() where UserId=@UserId and NoteId=@NoteId
+Select * from Note where UserId = @UserId
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
+
+--To get the all records from table
+select * from Note
+
+
+--Stored Procedure for To Get All Notes
+Create procedure spGetAllNotes(@UserId int)
+As
+Begin try
+select * from Note where UserId = @UserId and IsTrash=0
+end try
+Begin catch
+SELECT 
+	ERROR_NUMBER() AS ErrorNumber,
+	ERROR_STATE() AS ErrorState,
+	ERROR_PROCEDURE() AS ErrorProcedure,
+	ERROR_LINE() AS ErrorLine,
+	ERROR_MESSAGE() AS ErrorMessage;
+END CATCH
+
