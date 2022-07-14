@@ -52,109 +52,109 @@ namespace RepositoryLayer.Services
 
         }
 
-        //public bool ForgetPasswordUser(string email)
-        //{
-        //    SqlConnection connection = new SqlConnection(connectionString);
+        public bool ForgetPasswordUser(string email)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
 
-        //    try
-        //    {
-        //        using (connection)
-        //        {
-        //            connection.Open();
-        //            SqlCommand com = new SqlCommand("spForgetPasswordUser", connection);
-        //            com.CommandType = CommandType.StoredProcedure;
-        //            com.Parameters.AddWithValue("@Email", email);
-        //            var result = com.ExecuteNonQuery();
-        //            SqlDataReader rd = com.ExecuteReader();
-        //            UserResponseModel response = new UserResponseModel();
-        //            if (rd.Read())
-        //            {
-        //                response.UserId = rd["UserId"] == DBNull.Value ? default : rd.GetInt32("UserId");
-        //                response.Email = rd["Email"] == DBNull.Value ? default : rd.GetString("Email");
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand com = new SqlCommand("spForgetPasswordUser", connection);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@Email", email);
+                    var result = com.ExecuteNonQuery();
+                    SqlDataReader rd = com.ExecuteReader();
+                    UserResponseModel response = new UserResponseModel();
+                    if (rd.Read())
+                    {
+                        response.UserId = rd["UserId"] == DBNull.Value ? default : rd.GetInt32("UserId");
+                        response.Email = rd["Email"] == DBNull.Value ? default : rd.GetString("Email");
 
-        //            }
-        //            MessageQueue messageQueue;
-        //            //ADD MESSAGE TO QUEUE
-        //            if (MessageQueue.Exists(@".\Private$\FundooQueue"))
-        //            {
-        //                messageQueue = new MessageQueue(@".\Private$\FundooQueue");
-        //            }
-        //            else
-        //            {
-        //                messageQueue = MessageQueue.Create(@".\Private$\FundooQueue");
-        //            }
-        //            Message MyMessage = new Message();
-        //            MyMessage.Formatter = new BinaryMessageFormatter();
-        //            MyMessage.Body = GenerateJWTToken(email, response.UserId);
-        //            MyMessage.Label = "Forget Password Email";
-        //            messageQueue.Send(MyMessage);
-        //            Message msg = messageQueue.Receive();
-        //            msg.Formatter = new BinaryMessageFormatter();
-        //            EmailService.SendEmail(email, msg.Body.ToString());
-        //            messageQueue.ReceiveCompleted += new ReceiveCompletedEventHandler(msmqQueue_ReceiveCompleted);
+                    }
+                    MessageQueue messageQueue;
+                    //ADD MESSAGE TO QUEUE
+                    if (MessageQueue.Exists(@".\Private$\FundooQueue"))
+                    {
+                        messageQueue = new MessageQueue(@".\Private$\FundooQueue");
+                    }
+                    else
+                    {
+                        messageQueue = MessageQueue.Create(@".\Private$\FundooQueue");
+                    }
+                    Message MyMessage = new Message();
+                    MyMessage.Formatter = new BinaryMessageFormatter();
+                    MyMessage.Body = GenerateJWTToken(email, response.UserId);
+                    MyMessage.Label = "Forget Password Email";
+                    messageQueue.Send(MyMessage);
+                    Message msg = messageQueue.Receive();
+                    msg.Formatter = new BinaryMessageFormatter();
+                    EmailService.SendEmail(email, msg.Body.ToString());
+                    messageQueue.ReceiveCompleted += new ReceiveCompletedEventHandler(msmqQueue_ReceiveCompleted);
 
-        //            messageQueue.BeginReceive();
-        //            messageQueue.Close();
-        //            return true;
+                    messageQueue.BeginReceive();
+                    messageQueue.Close();
+                    return true;
 
 
-        //        }
-        //    }
+                }
+            }
 
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        //private void msmqQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        MessageQueue queue = (MessageQueue)sender;
-        //        Message msg = queue.EndReceive(e.AsyncResult);
-        //        EmailService.SendEmail(e.Message.ToString(), GenerateToken(e.Message.ToString()));
-        //        queue.BeginReceive();
-        //    }
-        //    catch (MessageQueueException ex)
-        //    {
-        //        if (ex.MessageQueueErrorCode == MessageQueueErrorCode.AccessDenied)
-        //        {
-        //            Console.WriteLine("Access is denied. " +
-        //                "Queue might be a system queue.");
-        //        }
-        //    }
-        //}
+        private void msmqQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs e)
+        {
+            try
+            {
+                MessageQueue queue = (MessageQueue)sender;
+                Message msg = queue.EndReceive(e.AsyncResult);
+                EmailService.SendEmail(e.Message.ToString(), GenerateToken(e.Message.ToString()));
+                queue.BeginReceive();
+            }
+            catch (MessageQueueException ex)
+            {
+                if (ex.MessageQueueErrorCode == MessageQueueErrorCode.AccessDenied)
+                {
+                    Console.WriteLine("Access is denied. " +
+                        "Queue might be a system queue.");
+                }
+            }
+        }
 
-        //private string GenerateToken(string email)
-        //{
-        //    try
-        //    {
-        //        // generate token
-        //        var tokenHandler = new JwtSecurityTokenHandler();
-        //        var tokenKey = Encoding.ASCII.GetBytes("THIS_IS_MY_KEY_TO_GENERATE_TOKEN");
-        //        var tokenDescriptor = new SecurityTokenDescriptor
-        //        {
-        //            Subject = new ClaimsIdentity(new Claim[]
-        //            {
-        //            new Claim("email", email)
+        private string GenerateToken(string email)
+        {
+            try
+            {
+                // generate token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenKey = Encoding.ASCII.GetBytes("THIS_IS_MY_KEY_TO_GENERATE_TOKEN");
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                    new Claim("email", email)
 
-        //            }),
-        //            Expires = DateTime.UtcNow.AddHours(2),
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(2),
 
-        //            SigningCredentials =
-        //        new SigningCredentials(
-        //            new SymmetricSecurityKey(tokenKey),
-        //            SecurityAlgorithms.HmacSha256Signature)
-        //        };
-        //        var token = tokenHandler.CreateToken(tokenDescriptor);
-        //        return tokenHandler.WriteToken(token);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+                    SigningCredentials =
+                new SigningCredentials(
+                    new SymmetricSecurityKey(tokenKey),
+                    SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public List<UserResponseModel> GetAllUsers()
         {
@@ -191,75 +191,73 @@ namespace RepositoryLayer.Services
             }
         }
 
-        //public string LoginUser(LoginUserModel loginUser)
-        //{
-        //    SqlConnection connection = new SqlConnection(connectionString);
-        //    try
-        //    {
-        //        using (connection)
-        //        {
-        //            connection.Open();
-        //            SqlCommand com = new SqlCommand("spLoginUser", connection);
-        //            com.CommandType = CommandType.StoredProcedure;
-        //            com.Parameters.AddWithValue("@Email", loginUser.Email);
-        //            com.Parameters.AddWithValue("@password", loginUser.Password);
-        //            var result = com.ExecuteNonQuery();
-        //            SqlDataReader rd = com.ExecuteReader();
-        //            UserResponseModel response = new UserResponseModel();
-        //            if (rd.Read())
-        //            {
-        //                response.UserId = rd["UserId"] == DBNull.Value ? default : rd.GetInt32("UserId");
-        //                response.Email = rd["Email"] == DBNull.Value ? default : rd.GetString("Email");
-        //                response.password = rd["password"] == DBNull.Value ? default : rd.GetString("password");
+        public string LoginUser(LoginUserModel loginUser)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand com = new SqlCommand("spLoginUser", connection);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@Email", loginUser.Email);
+                    com.Parameters.AddWithValue("@password", loginUser.Password);
+                    var result = com.ExecuteNonQuery();
+                    SqlDataReader rd = com.ExecuteReader();
+                    UserResponseModel response = new UserResponseModel();
+                    if (rd.Read())
+                    {
+                        response.UserId = rd["UserId"] == DBNull.Value ? default : rd.GetInt32("UserId");
+                        response.Email = rd["Email"] == DBNull.Value ? default : rd.GetString("Email");
+                        response.password = rd["password"] == DBNull.Value ? default : rd.GetString("password");
 
-        //            }
-        //            return GenerateJWTToken(response.Email, response.UserId);
+                    }
+                    return GenerateJWTToken(response.Email, response.UserId);
 
-        //        }
+                }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
-        //private string GenerateJWTToken(string email, int userId)
-        //{
-        //    try
-        //    {
-        //        // generate token
-        //        var tokenHandler = new JwtSecurityTokenHandler();
-        //        var tokenKey = Encoding.ASCII.GetBytes("THIS_IS_MY_KEY_TO_GENERATE_TOKEN");
-        //        var tokenDescriptor = new SecurityTokenDescriptor
-        //        {
-        //            Subject = new ClaimsIdentity(new Claim[]
-        //            {
-        //                new Claim("email", email),
-        //                new Claim("userId",userId.ToString())
-        //            }),
-        //            Expires = DateTime.UtcNow.AddHours(2),
+        private string GenerateJWTToken(string email, int userId)
+        {
+            try
+            {
+                // generate token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var tokenKey = Encoding.ASCII.GetBytes("THIS_IS_MY_KEY_TO_GENERATE_TOKEN");
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim("email", email),
+                        new Claim("userId",userId.ToString())
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(2),
 
-        //            SigningCredentials =
-        //        new SigningCredentials(
-        //            new SymmetricSecurityKey(tokenKey),
-        //            SecurityAlgorithms.HmacSha256Signature)
-        //        };
-        //        var token = tokenHandler.CreateToken(tokenDescriptor);
-        //        return tokenHandler.WriteToken(token);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+                    SigningCredentials =
+                new SigningCredentials(
+                    new SymmetricSecurityKey(tokenKey),
+                    SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         //public bool ResetPassoword(string email, PasswordModel modelPassword)
-        
-        //{
+       //{
         //    SqlConnection connection = new SqlConnection(connectionString);
         //    var result = 0;
-
         //    try
         //    {
         //        using (connection)
@@ -283,7 +281,6 @@ namespace RepositoryLayer.Services
         //    {
         //        throw ex;
         //    }
-
         //}
     }
 }

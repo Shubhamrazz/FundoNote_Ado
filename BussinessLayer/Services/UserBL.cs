@@ -61,16 +61,16 @@ namespace BussinessLayer.Services
                 throw ex;
             }
         }
-        public bool ResetPassoword(string email, PasswordModel modelPassword)
-        {
-            try
-            {
-                return this.userRL.ResetPassoword(email, modelPassword);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //public bool ResetPassoword(string email, PasswordModel modelPassword)
+        //{
+        //    try
+        //    {
+        //        return this.userRL.ResetPassoword(email, modelPassword);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }
