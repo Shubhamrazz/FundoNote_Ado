@@ -49,20 +49,20 @@ namespace FundoNote_Ado.net.Controllers
             }
         }
 
-        //[HttpPost("Login")]
-        //public IActionResult LoginUser(LoginUserModel user)
-        //{
-        //    try
-        //    {
-        //        string result = this.userBL.LoginUser(user);
-        //        return Ok(new { success = true, Message = "Token Generated successfully", data = result });
+        [HttpPost("Login")]
+        public IActionResult LoginUser(LoginUserModel user)
+        {
+            try
+            {
+                string result = this.userBL.LoginUser(user);
+                return Ok(new { success = true, Message = "Token Generated successfully", data = result });
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         //[HttpPost("ForgetPasswordUser/{email}")]
         //public IActionResult ForgetPasswordUser(string email)
@@ -75,7 +75,7 @@ namespace FundoNote_Ado.net.Controllers
         //    }
         //    catch (Exception ex)
         //    {
-                
+
         //        throw ex;
         //    }
         //}
